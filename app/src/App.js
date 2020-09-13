@@ -21,7 +21,7 @@ class App extends React.Component {
     };
 
     getNotifications() {
-      axios.get(`http://localhost:8080/notifications`)
+      axios.get(`/notifications`)
       .then(res => {
         this.notifications = res.data;
         this.setState({ filteredNotifications: this.notifications });
@@ -44,11 +44,15 @@ class App extends React.Component {
     };
 
     deleteNotification(item){ 
-      const filtered = this.state.filteredNotifications.filter((notification)=> {
-        return notification.id !== item.id;
+      axios.delete(`/notifications/${item.id}`)
+      .then(() => {
+        this.getNotifications();
       });
-      this.setState({filteredNotifications: filtered});
      };
+
+     isNotificationsExists() {
+      return this.state.filteredNotifications && this.state.filteredNotifications.length > 0
+     }
 
     render() { 
       return (
@@ -67,7 +71,7 @@ class App extends React.Component {
             <span style={{float: 'right'}}> <Button variant="contained" color="primary">Add Notifications</Button></span>
           </div>
           {
-            this.state.filteredNotifications ? this.state.filteredNotifications.map((item)=> {
+            this.isNotificationsExists() ? this.state.filteredNotifications.map((item)=> {
               return  <Card style={styles.card} variant="outlined" key={item.id}>            
                 <CardContent style={{borderLeft: "solid 10px", borderLeftColor: item.severity === "3" ? "red" : 
                 (item.severity === "2" ? "#e8a830" : "green") } }> 
@@ -80,7 +84,11 @@ class App extends React.Component {
                   </Typography>
                 </CardContent>
               </Card>
-            }) : "Processing ..."
+            }) : <Card style={styles.card} variant="outlined" >            
+                  <CardContent> 
+                    <Typography variant="h5" component="h2">No notifications !!! </Typography>  
+                  </CardContent>
+                </Card>
           }
       </div>
     );
