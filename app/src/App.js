@@ -1,14 +1,14 @@
-import React from 'react';
-import axios from 'axios';
+import React, { Fragment } from 'react';
 import {Container, Typography, CardActions, CardContent, Card, Button} from '@material-ui/core';
 import classNames from 'classnames';
 import './App.css';
 import NotificationService from './services/notification.service';
+import AddNotification from './addNotification/addNotification';
 
 class App extends React.Component {
     constructor(){
       super();
-      this.state = {}
+      this.state = {isAdd: false}
     };
 
     componentDidMount() {
@@ -48,45 +48,67 @@ class App extends React.Component {
 
     render() { 
       return (
-      <Container fixed>
-        <div className="notificationfilter-container">
-          <span>
-              <label className="notification-severity-filter-label">Filter By:</label>
-              <select className="notification-severity-filter" name="selectedTitle" id="titles" 
-                onChange={(selected)=> this.getSelectedNotification(selected)}>
-                <option value="All" key="All">All</option>
-                <option key={1} value={1}>Info</option>
-                <option key={2} value={2}>Warning</option>
-                <option key={3} value={3}>Severe</option>
-            </select>
-            </span>
-            <span className="notification-add"> <Button variant="contained" color="primary">Add Notifications</Button></span>
-          </div>
-          {
-            this.isNotificationsExists() ? this.state.filteredNotifications.map((item)=> {
-              return  <Card className="notification-card-container" variant="outlined" key={item.id}>            
-                <CardContent className={classNames("notification-card-content-container", 
-                {
-                  "notification-card-content-severe": item.severity === "3",
-                  "notification-card-content-warning": item.severity === "2",
-                  "notification-card-content-info": item.severity === "1"
-                })}> 
-                  <CardActions className="notification-card-delete">
-                    <Button size="small" onClick={() => this.deleteNotification(item)}>X</Button>
-                  </CardActions>
-                  <Typography variant="h5" component="h2"> {item.title} </Typography>  
-                  <Typography variant="body2" component="p">
-                    {item.description}
-                  </Typography>
-                </CardContent>
-              </Card>
-            }) : <Card className="notification-card-container" variant="outlined" >            
-                  <CardContent> 
-                    <Typography variant="h5" component="h2">No notifications !!! </Typography>  
-                  </CardContent>
-                </Card>
-          }
-        </Container>
+      <Fragment>
+        {
+          this.state.isAdd ?
+          <Container fixed>
+            <AddNotification add={() => {
+              this.setState({
+                isAdd : false
+              });
+            }}></AddNotification>
+          </Container>  
+          :
+          <Container fixed>
+            <div className="notificationfilter-container">
+              <span>
+                  <label className="notification-severity-filter-label">Filter By:</label>
+                  <select className="notification-severity-filter" name="selectedTitle" id="titles" 
+                    onChange={(selected)=> this.getSelectedNotification(selected)}>
+                    <option value="All" key="All">All</option>
+                    <option key={1} value={1}>Info</option>
+                    <option key={2} value={2}>Warning</option>
+                    <option key={3} value={3}>Severe</option>
+                </select>
+                </span>
+                <span className="notification-add"> 
+                  <Button variant="contained" color="primary" onClick={
+                    () => {
+                      this.setState({
+                        isAdd: true
+                      });
+                    }
+                  }>Add Notifications</Button>
+                </span>
+              </div>
+              {
+                this.isNotificationsExists() ? this.state.filteredNotifications.map((item)=> {
+                  return  <Card className="notification-card-container" variant="outlined" key={item.id}>            
+                    <CardContent className={classNames("notification-card-content-container", 
+                    {
+                      "notification-card-content-severe": item.severity === "3",
+                      "notification-card-content-warning": item.severity === "2",
+                      "notification-card-content-info": item.severity === "1"
+                    })}> 
+                      <CardActions className="notification-card-delete">
+                        <Button size="small" onClick={() => this.deleteNotification(item)}>X</Button>
+                      </CardActions>
+                      <Typography variant="h5" component="h2"> {item.title} </Typography>  
+                      <Typography variant="body2" component="p">
+                        {item.description}
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                }) : <Card className="notification-card-container" variant="outlined" >            
+                      <CardContent> 
+                        <Typography variant="h5" component="h2">No notifications !!! </Typography>  
+                      </CardContent>
+                    </Card>
+              }
+            </Container>
+        }
+      </Fragment>  
+      
     );
   }
 
