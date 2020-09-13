@@ -1,0 +1,38 @@
+[
+    {
+        "id": 1,
+        "title": "Inclement Weather Advisory",
+        "description": "There is bad weather coming your way, seek shelter.",
+        "severity": "3"
+    },
+    {
+        "id": 2,
+        "title": "Weather is beautiful",
+        "description": "The weather is beautiful today, go out and get some sun!",
+        "severity": "1"
+    },
+    {
+        "id": 3,
+        "title": "Traffic Jam",
+        "description": "A car has broke down on the highway, traffic delays expected.",
+        "severity": "2"
+    },
+    {
+        "id": 4,
+        "title": "Computer is on fire",
+        "description": "Computer is running very hot.",
+        "severity": "3"
+    },
+    {
+        "id": 5,
+        "title": "Computer Update Available",
+        "description": "There is an update available for your computer, please download",
+        "severity": "1"
+    },
+    {
+        "id": 6,
+        "title": "Fuel is low",
+        "description": "Car is running low on gas, time to fill up!",
+        "severity": "2"
+    }
+]
