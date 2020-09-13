@@ -10,7 +10,7 @@ app.use(cors());
 
  
 app.get('/', function (req, res) {
-    res.send('Welcome to Forge Platform Interview');
+    res.send('Welcome to Notifications Server');
 });
 
 app.get('/notifications', function (req, res) {

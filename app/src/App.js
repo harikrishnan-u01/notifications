@@ -1,14 +1,9 @@
 import React from 'react';
 import axios from 'axios';
+import {Container, Typography, CardActions, CardContent, Card, Button} from '@material-ui/core';
+import classNames from 'classnames';
 import './App.css';
-import {Typography, CardActions, CardContent, Card, Button} from '@material-ui/core';
-
-const styles = {
-  main : {padding: '2px 16px'},
-  card : {
-    marginBottom: "2rem"},
-    cardHeader : {fontWeight: 'bold'}
-}
+import NotificationService from './services/notification.service';
 
 class App extends React.Component {
     constructor(){
@@ -21,11 +16,10 @@ class App extends React.Component {
     };
 
     getNotifications() {
-      axios.get(`/notifications`)
-      .then(res => {
+      NotificationService.getNotifications().then(res => {
         this.notifications = res.data;
         this.setState({ filteredNotifications: this.notifications });
-      });
+      });;
     };
 
     getSelectedNotification(selected) {
@@ -33,7 +27,6 @@ class App extends React.Component {
       const severity = selected.target.value;
       if(severity !== "All"){
         const filtered = this.notifications.filter((item)=> {
-          console.log("item.item --> ", item.id);
           return item.severity === severity;
         });
 
@@ -44,8 +37,7 @@ class App extends React.Component {
     };
 
     deleteNotification(item){ 
-      axios.delete(`/notifications/${item.id}`)
-      .then(() => {
+      NotificationService.deleteNotification(item.id).then(() => {
         this.getNotifications();
       });
      };
@@ -56,11 +48,11 @@ class App extends React.Component {
 
     render() { 
       return (
-      <div style={styles.main}>
-        <div style={{marginBottom: "5rem"}}>
+      <Container fixed>
+        <div className="notificationfilter-container">
           <span>
-              <label style={{fontWeight: "bold"}}>Filter By:</label>
-              <select style={{height: "2rem"}} name="selectedTitle" id="titles" 
+              <label className="notification-severity-filter-label">Filter By:</label>
+              <select className="notification-severity-filter" name="selectedTitle" id="titles" 
                 onChange={(selected)=> this.getSelectedNotification(selected)}>
                 <option value="All" key="All">All</option>
                 <option key={1} value={1}>Info</option>
@@ -68,14 +60,18 @@ class App extends React.Component {
                 <option key={3} value={3}>Severe</option>
             </select>
             </span>
-            <span style={{float: 'right'}}> <Button variant="contained" color="primary">Add Notifications</Button></span>
+            <span className="notification-add"> <Button variant="contained" color="primary">Add Notifications</Button></span>
           </div>
           {
             this.isNotificationsExists() ? this.state.filteredNotifications.map((item)=> {
-              return  <Card style={styles.card} variant="outlined" key={item.id}>            
-                <CardContent style={{borderLeft: "solid 10px", borderLeftColor: item.severity === "3" ? "red" : 
-                (item.severity === "2" ? "#e8a830" : "green") } }> 
-                  <CardActions style={{float: "right"}}>
+              return  <Card className="notification-card-container" variant="outlined" key={item.id}>            
+                <CardContent className={classNames("notification-card-content-container", 
+                {
+                  "notification-card-content-severe": item.severity === "3",
+                  "notification-card-content-warning": item.severity === "2",
+                  "notification-card-content-info": item.severity === "1"
+                })}> 
+                  <CardActions className="notification-card-delete">
                     <Button size="small" onClick={() => this.deleteNotification(item)}>X</Button>
                   </CardActions>
                   <Typography variant="h5" component="h2"> {item.title} </Typography>  
@@ -84,13 +80,13 @@ class App extends React.Component {
                   </Typography>
                 </CardContent>
               </Card>
-            }) : <Card style={styles.card} variant="outlined" >            
+            }) : <Card className="notification-card-container" variant="outlined" >            
                   <CardContent> 
                     <Typography variant="h5" component="h2">No notifications !!! </Typography>  
                   </CardContent>
                 </Card>
           }
-      </div>
+        </Container>
     );
   }
 
