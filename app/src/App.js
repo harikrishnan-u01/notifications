@@ -30,11 +30,11 @@ class App extends React.Component {
 
     getSelectedNotification(selected) {
       console.log("selected ", selected.target.value);
-      const selectedId = selected.target.value;
-      if(selectedId !== "All"){
+      const severity = selected.target.value;
+      if(severity !== "All"){
         const filtered = this.notifications.filter((item)=> {
           console.log("item.item --> ", item.id);
-          return item.id == selectedId;
+          return item.severity === severity;
         });
 
         this.setState({filteredNotifications: filtered});
@@ -56,13 +56,12 @@ class App extends React.Component {
         <div style={{marginBottom: "5rem"}}>
           <span>
               <label style={{fontWeight: "bold"}}>Filter By:</label>
-              <select style={{height: "2rem"}} name="selectedTitle" id="titles" onChange={(selected)=> this.getSelectedNotification(selected)}>
+              <select style={{height: "2rem"}} name="selectedTitle" id="titles" 
+                onChange={(selected)=> this.getSelectedNotification(selected)}>
                 <option value="All" key="All">All</option>
-              {
-                 this.notifications ? this.notifications.map((item) => {
-                 return <option key={item.id} value={item.id}>{item.title}</option>
-                 }) : null
-              }
+                <option key={1} value={1}>Info</option>
+                <option key={2} value={2}>Warning</option>
+                <option key={3} value={3}>Severe</option>
             </select>
             </span>
             <span style={{float: 'right'}}> <Button variant="contained" color="primary">Add Notifications</Button></span>
