@@ -15,11 +15,10 @@ class App extends React.Component {
       this.getNotifications();
     };
 
-    getNotifications() {
-      NotificationService.getNotifications().then(res => {
-        this.notifications = res.data;
-        this.setState({ filteredNotifications: this.notifications });
-      });;
+    async getNotifications() {
+      let res = await NotificationService.getNotifications();
+      this.notifications = res.data;
+      this.setState({ filteredNotifications: this.notifications });
     };
 
     getSelectedNotification(selected) {
@@ -42,6 +41,15 @@ class App extends React.Component {
       });
      };
 
+     async addNotification (formData) {
+      formData.id = this.notifications.length + 1;
+      await NotificationService.addNotification(formData);
+      this.getNotifications();
+      this.setState({
+        isAdd : false
+      });
+    }
+
      isNotificationsExists() {
       return this.state.filteredNotifications && this.state.filteredNotifications.length > 0
      }
@@ -52,11 +60,7 @@ class App extends React.Component {
         {
           this.state.isAdd ?
           <Container fixed>
-            <AddNotification add={() => {
-              this.setState({
-                isAdd : false
-              });
-            }}></AddNotification>
+            <AddNotification add={(formData) => this.addNotification(formData)}></AddNotification>
           </Container>  
           :
           <Container fixed>
