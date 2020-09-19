@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 import {Container, Typography, CardActions, CardContent, Card, Button} from '@material-ui/core';
-import { EditIcon, DeleteForeverIcon } from '@material-ui/icons';   
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import classNames from 'classnames';
 import './App.css';
 import NotificationService from './services/notification.service';
