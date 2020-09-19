@@ -23,6 +23,18 @@ app.post('/notifications', function (req, res) {
     res.status(201).send(newNotification);
 });
 
+app.put('/notifications/:id', function (req, res) {
+    const id = req.params.id;
+    const index = notifications.findIndex(notification => notification.id === parseInt(id));
+    if (index >= 0) {
+        notifications[index] = req.body;
+        notifications[index].id = parseInt(id);
+        res.status(200).send()
+    } else {
+        res.status(404).send()
+    }
+});
+
 app.delete('/notifications/:id', function (req, res) {
     const id = req.params.id;
     const index = notifications.findIndex(notification => notification.id === parseInt(id));

@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react';
 import {Container, Typography, CardActions, CardContent, Card, Button} from '@material-ui/core';
+import { EditIcon, DeleteForeverIcon } from '@material-ui/icons';   
 import classNames from 'classnames';
 import './App.css';
 import NotificationService from './services/notification.service';
@@ -8,7 +9,10 @@ import AddNotification from './addNotification/addNotification';
 class App extends React.Component {
     constructor(){
       super();
-      this.state = {isAdd: false}
+      this.state = {
+        isAdd: false,
+        selectedNotification: null
+      }
     };
 
     componentDidMount() {
@@ -41,10 +45,34 @@ class App extends React.Component {
       });
      };
 
-     async addNotification (formData) {
-      formData.id = this.notifications.length + 1;
-      await NotificationService.addNotification(formData);
-      this.getNotifications();
+    showEditNotification(item) {
+      this.setState({
+        isAdd: true,
+        selectedNotification: item 
+      });
+    };
+
+    showAddNotification() {
+      this.setState({
+        isAdd: true,
+        selectedNotification: null 
+      });
+    }
+
+    async addNotification (formData) {
+       if(formData.id){
+        await NotificationService.updateNotification(formData);
+       } else {
+          formData.id = this.notifications.length + 1;
+          await NotificationService.addNotification(formData);
+       }
+       this.getNotifications();
+       this.setState({
+         isAdd : false
+       });
+    }
+
+    cancelNotification () {
       this.setState({
         isAdd : false
       });
@@ -60,7 +88,12 @@ class App extends React.Component {
         {
           this.state.isAdd ?
           <Container fixed>
-            <AddNotification add={(formData) => this.addNotification(formData)}></AddNotification>
+            <AddNotification 
+              selectedNotification={this.state.selectedNotification} 
+              add={(formData) => this.addNotification(formData)}
+              cancel={() => this.cancelNotification()}
+            >
+            </AddNotification>
           </Container>  
           :
           <Container fixed>
@@ -77,11 +110,7 @@ class App extends React.Component {
                 </span>
                 <span className="notification-add"> 
                   <Button variant="contained" color="primary" onClick={
-                    () => {
-                      this.setState({
-                        isAdd: true
-                      });
-                    }
+                    () => this.showAddNotification()
                   }>Add Notifications</Button>
                 </span>
               </div>
@@ -95,7 +124,10 @@ class App extends React.Component {
                       "notification-card-content-info": item.severity === "1"
                     })}> 
                       <CardActions className="notification-card-delete">
-                        <Button size="small" onClick={() => this.deleteNotification(item)}>X</Button>
+                        <Button size="small" onClick={() => this.deleteNotification(item)}><DeleteForeverIcon /></Button>
+                      </CardActions>
+                      <CardActions className="notification-card-delete">
+                        <Button size="small" onClick={() => this.showEditNotification(item)}><EditIcon /></Button>
                       </CardActions>
                       <Typography variant="h5" component="h2"> {item.title} </Typography>  
                       <Typography variant="body2" component="p">

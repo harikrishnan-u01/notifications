@@ -12,4 +12,8 @@ export default class NotificationService {
     static addNotification(data) {
         return axios.post("/notifications", data);
     }
+
+    static updateNotification(data) {
+        return axios.put(`/notifications/${data.id}`, data);
+    }    
 }

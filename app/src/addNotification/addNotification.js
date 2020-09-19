@@ -1,15 +1,33 @@
-import React, {Component} from 'react';
+import React, {useEffect, useState} from 'react';
 import {TextField, Button, Grid} from '@material-ui/core';
 import "./addNotification.css"
 
-export default class AddNotification extends Component{
-    formData = {severity: "1"};
-    state = {isError: false};
-    render() {
-        return <div className="addNotification-container">
+export default function AddNotification(props) {
+    const [isError, setError] = useState(false);
+    const [formData, setFormData] = useState({
+        title: "",
+        description: "",
+        severity: "1"
+    });
+    
+    useEffect(()=> {
+        if(props.selectedNotification){
+            console.log("props.selectedNotification  ", props.selectedNotification);
+            const {id, title, description, severity} = props.selectedNotification;
+            setFormData({
+                id: id,
+                title: title,
+                description: description,
+                severity: severity
+            });           
+        }
+    }, []);
+
+    return (
+        <div className="addNotification-container">
             <Grid container spacing={2}>
                 {
-                    this.state.isError ? 
+                    isError ? 
                     <Grid item xs={12}>
                         <p style={{color: 'red'}}>Please enter all mandatory fields</p>
                     </Grid>  : null
@@ -17,23 +35,26 @@ export default class AddNotification extends Component{
                 <Grid item xs={12}>
                     <TextField 
                         required 
-                        id="outlined-basic" 
+                        id="title" 
                         label="Notification Text" 
                         variant="outlined" 
-                        onChange={(e) => {this.formData.title = e.target.value}}
-                        value={this.formData.title} />
+                        value={formData.title}
+                        defaultValue={formData.title}
+                        onChange={(e) => {formData.title = e.target.value}}
+                    />
                 </Grid>  
                 <Grid item xs={12}>
                     <TextField 
                         required 
-                        id="outlined-basic" 
+                        id="description" 
                         label="Notification Description"
                         variant="outlined" 
-                        value={this.formData.description} 
-                        onChange={(e) => {this.formData.description = e.target.value}}
+                        defaultValue={formData.description} 
+                        onChange={(e) => {formData.description = e.target.value}}
                         multiline 
                         rows={10} 
-                        rowsMax={10}/>
+                        rowsMax={10}
+                    />
                 </Grid>
                 <Grid item xs={12}>
                     <TextField
@@ -41,8 +62,8 @@ export default class AddNotification extends Component{
                         select
                         required
                         label="Severity"
-                        value={this.formData.severity}
-                        onChange={(e) => {this.formData.severity = e.target.value}}
+                        defaultValue={formData.severity}
+                        onChange={(e) => {formData.severity = e.target.value}}
                         SelectProps={{
                             native: true,
                         }}
@@ -61,19 +82,32 @@ export default class AddNotification extends Component{
                     </TextField>
                 </Grid>
                 <Grid item xs={12}>
-                    <Button variant="contained" color="primary" onClick={
-                                () => {
-                                    if(!this.formData.title || !this.formData.description){
-                                        this.setState({isError: true});
-                                        return;
-                                    }
-                                    this.setState({isError: false});
-                                    this.props.add(this.formData);
-                                }
-                            }>Submit
-                    </Button>
+                    <Grid container spacing={1}>
+                        <Grid item xs={3} md={2} lg={1}>
+                            <Button variant="contained"  onClick={
+                                        () => {
+                                            setError(false);
+                                            props.cancel();
+                                        }
+                                    }>Cancel
+                            </Button>
+                        </Grid>
+                        <Grid item xs={3} md={2} lg={1}>
+                            <Button variant="contained" color="primary" onClick={
+                                        () => {
+                                            if(!formData.title || !formData.description){
+                                                setError(true);
+                                                return;
+                                            }
+                                            setError(false);
+                                            props.add(formData);
+                                        }
+                                    }>Submit
+                            </Button>
+                        </Grid>
+                    </Grid>
                 </Grid>
             </Grid>
-        </div>;
-    }
+        </div>
+    );
 }
