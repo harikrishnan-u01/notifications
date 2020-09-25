@@ -6,6 +6,7 @@ import classNames from 'classnames';
 import './App.css';
 import NotificationService from './services/notification.service';
 import AddNotification from './addNotification/addNotification';
+import ListNotifications from './listNotifications/listNotifications';
 
 class App extends React.Component {
     constructor(){
@@ -86,6 +87,7 @@ class App extends React.Component {
     render() { 
       return (
       <Fragment>
+        <ListNotifications></ListNotifications>
         {
           this.state.isAdd ?
           <Container fixed>
