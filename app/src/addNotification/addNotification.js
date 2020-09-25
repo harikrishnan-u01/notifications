@@ -12,7 +12,6 @@ export default function AddNotification(props) {
     
     useEffect(()=> {
         if(props.selectedNotification){
-            console.log("props.selectedNotification  ", props.selectedNotification);
             const {id, title, description, severity} = props.selectedNotification;
             setFormData({
                 id: id,
@@ -21,7 +20,7 @@ export default function AddNotification(props) {
                 severity: severity
             });           
         }
-    }, []);
+    }, [props.selectedNotification]);
 
     return (
         <div className="addNotification-container">

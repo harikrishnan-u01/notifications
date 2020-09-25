@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const cors = require("cors")
+const cors = require("cors");
+const path = require("path");
 
 const notifications = require("./notifications.json")
 
@@ -8,10 +9,15 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
+app.use(express.static(path.join(__dirname, "..", "..", "build")));
  
-app.get('/', function (req, res) {
-    res.send('Welcome to Notifications Server');
-});
+// app.get('/', function (req, res) {
+//     res.send('Welcome to Hari App');
+// });
+
+app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "..", "..", "build", "index.html"));
+  });
 
 app.get('/notifications', function (req, res) {
     res.send(notifications);
