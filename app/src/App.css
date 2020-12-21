@@ -3,7 +3,7 @@
 }
 
 .notification-card-content-container {
-  border-left: solid 10px; 
+  border-left: solid 10px;
 }
 
 .notification-card-content-severe {
@@ -21,6 +21,9 @@
 .notificationfilter-container {
   margin-bottom: 2rem;
   margin-top: 2rem;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
 }
 
 .notification-card-delete {
@@ -29,10 +32,15 @@
 
 .notification-severity-filter {
   height: 2rem;
+  width: 10rem;
+  border-radius: 0.5rem;
+  border: 0.8px solid black;
+  margin: 5px;
 }
 
 .notification-severity-filter-label {
   font-weight: bold;
+  margin: 5px;
 }
 
 .notification-add {

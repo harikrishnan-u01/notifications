@@ -17,7 +17,7 @@
     "react-scripts": "3.4.3"
   },
   "scripts": {
-    "start-client": "concurrently \"react-scripts start\" \"cd server && npm start\"",
+    "start-client": "npm i && concurrently \"react-scripts start\" \"cd server && npm i && npm start\"",
     "start": "npm run build && (cd server && npm start)",
     "build": "react-scripts build",
     "test": "react-scripts test",
